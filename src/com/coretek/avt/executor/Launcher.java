@@ -9,18 +9,36 @@ package com.coretek.avt.executor;
  */
 public class Launcher
 {
-	/**
-	 * 
-	 * @param args 命令行参数：
-	 * 1.mode=debug/run:运行模型，执行器支持调试模式和运行模式
-	 * 2.endian=big/little:大小端设置
-	 * 3.beginMsg=uuid:开始消息的UUID
-	 * 4.endMsg=uuid:结束消息的UUID
-	 */
-	public static void main(String[] args)
+
+	public static final String	MODE		= "mode";
+
+	public static final String	ENDIAN		= "endian";
+
+	public static final String	BEGIN_MSG	= "beginMsg";
+
+	public static final String	END_MSG		= "endMsg";
+
+	public static final String	CASE_FILE	= "caseFile";
+
+	public static ParamManager	PARAM_MANAGER;
+
+	public Launcher() 
 	{
-		
 
 	}
 
+	/**
+	 * 
+	 * @param args
+	 *            命令行参数： </br>
+	 *            1.mode=debug/run:运行模型，执行器支持调试模式和运行模式</br>
+	 *            2.endian=big/little:大小端设置 </br> 
+	 *            3.beginMsg=uuid:开始消息的UUID </br>
+	 *            4.endMsg=uuid:结束消息的UUID </br>
+	 *            5.caseFile=路径：测试用例的路径
+	 */
+	public static void main(String[] args)
+	{
+		PARAM_MANAGER = new ParamManager(args);
+	}
 }
