@@ -1,5 +1,8 @@
 package com.coretek.avt.executor.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 消息
  * 
@@ -21,6 +24,18 @@ public class Message
 	private String	name;		// 消息名称
 
 	private byte[]	data;		// 消息的二进制值
+	
+	private List<Period> periods = new ArrayList<Period>(1);
+
+	public List<Period> getPeriods()
+	{
+		return periods;
+	}
+
+	public void setPeriods(List<Period> periods)
+	{
+		this.periods = periods;
+	}
 
 	public int getWidth()
 	{

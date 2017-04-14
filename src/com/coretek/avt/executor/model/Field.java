@@ -1,5 +1,8 @@
 package com.coretek.avt.executor.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 字段
  * 
@@ -18,13 +21,13 @@ public class Field
 
 	private String	value;		// 字段的值，有可能是表达式
 
-	private boolean	signed;		// 是否有符号
-	
-	private Field[] children;//子字段
-	
+	private boolean	signed;	// 是否有符号
+
+	private List<Field>	children = new ArrayList<Field>();	// 子字段
+
 	public Field()
 	{
-		
+
 	}
 
 	public String getId()
@@ -87,12 +90,12 @@ public class Field
 		this.signed = signed;
 	}
 
-	public Field[] getChildren()
+	public List<Field> getChildren()
 	{
 		return children;
 	}
 
-	public void setChildren(Field[] children)
+	public void setChildren(List<Field> children)
 	{
 		this.children = children;
 	}

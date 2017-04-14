@@ -1,5 +1,8 @@
 package com.coretek.avt.executor.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 表示测试用例
  * @author David
@@ -7,10 +10,22 @@ package com.coretek.avt.executor.model;
  */
 public class TestCase
 {
-	private String path;
+	private String path;//测试用例文件的路径
+	
+	private List<Message> messages = new ArrayList<Message>();
 	
 	public TestCase(String path)
 	{
 		this.path = path;
+	}
+	
+	public void addMessage(Message msg)
+	{
+		this.messages.add(msg);
+	}
+	
+	public List<Message> getMessages()
+	{
+		return messages;
 	}
 }
