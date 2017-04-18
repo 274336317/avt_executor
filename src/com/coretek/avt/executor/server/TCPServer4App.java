@@ -56,7 +56,11 @@ public class TCPServer4App implements IChannel, Runnable
 	@Override
 	public void close() throws IOException
 	{
-		
+		if(recvJob != null)
+		{
+			this.recvJob.shutDown();
+			this.recvJob = null;
+		}
 		
 		if (this.inputStream != null)
 		{
@@ -82,7 +86,6 @@ public class TCPServer4App implements IChannel, Runnable
 			this.serverSocket = null;
 		}
 		
-		
 	}
 
 	@Override
@@ -106,7 +109,6 @@ public class TCPServer4App implements IChannel, Runnable
 	
 	private class RecvJob implements Runnable
 	{
-		
 		private final int packageSize = 2048;
 		
 		private boolean flag = false;
