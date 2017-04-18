@@ -13,7 +13,6 @@ import java.util.concurrent.CountDownLatch;
  */
 public class Launcher
 {
-
 	public static final String	MODE		= "mode";
 
 	public static final String	ENDIAN		= "endian";

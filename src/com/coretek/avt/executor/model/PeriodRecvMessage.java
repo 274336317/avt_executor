@@ -1,6 +1,6 @@
 package com.coretek.avt.executor.model;
 
-public class RecvPeriodMessage extends PeriodMessage implements IRecvMessage
+public class PeriodRecvMessage extends PeriodMessage implements IRecvMessage
 {
 	
 	@Override

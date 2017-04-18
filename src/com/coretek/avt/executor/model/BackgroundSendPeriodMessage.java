@@ -1,6 +1,6 @@
 package com.coretek.avt.executor.model;
 
-public class BackgroundSendPeriodMessage extends SendPeriodMessage
+public class BackgroundSendPeriodMessage extends PeriodSendMessage
 {
 	
 }

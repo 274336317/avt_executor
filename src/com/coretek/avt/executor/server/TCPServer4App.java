@@ -12,24 +12,25 @@ import com.coretek.avt.executor.util.MessageDecoder;
 
 /**
  * 用于与应用进行通信的TCP服务端。
+ * 
  * @author David
  *
  */
 public class TCPServer4App implements IChannel, Runnable
 {
-	private ServerSocket	serverSocket;
+	private ServerSocket				serverSocket;
 
-	private Socket			socket;
+	private Socket						socket;
 
-	private InputStream		inputStream;
+	private InputStream					inputStream;
 
-	private OutputStream	outputStream;
+	private OutputStream				outputStream;
 
-	private int				port;
-	
-	private List<IRecvMessageListener> listeners = new ArrayList<IRecvMessageListener>(2);
-	
-	private RecvJob recvJob;
+	private int							port;
+
+	private List<IRecvMessageListener>	listeners	= new ArrayList<IRecvMessageListener>(2);
+
+	private RecvJob						recvJob;
 
 	public TCPServer4App(int port)
 	{
@@ -45,7 +46,7 @@ public class TCPServer4App implements IChannel, Runnable
 			socket = this.serverSocket.accept();
 			this.inputStream = socket.getInputStream();
 			this.outputStream = socket.getOutputStream();
-			
+
 			this.recvJob = new RecvJob();
 			new Thread(this.recvJob).start();
 		}
@@ -58,12 +59,12 @@ public class TCPServer4App implements IChannel, Runnable
 	@Override
 	public void close() throws IOException
 	{
-		if(recvJob != null)
+		if (recvJob != null)
 		{
 			this.recvJob.shutDown();
 			this.recvJob = null;
 		}
-		
+
 		if (this.inputStream != null)
 		{
 			this.inputStream.close();
@@ -87,13 +88,13 @@ public class TCPServer4App implements IChannel, Runnable
 			this.serverSocket.close();
 			this.serverSocket = null;
 		}
-		
+
 	}
 
 	@Override
 	public void send(byte[] data) throws IOException
 	{
-		if(this.outputStream != null)
+		if (this.outputStream != null)
 			this.outputStream.write(data);
 	}
 
@@ -108,45 +109,45 @@ public class TCPServer4App implements IChannel, Runnable
 	{
 		this.listeners.remove(listener);
 	}
-	
+
 	private class RecvJob implements Runnable
 	{
-		private final int packageSize = 2048;
-		
-		private boolean flag = false;
-		
+		private final int	packageSize	= 2048;
+
+		private boolean		flag		= false;
+
 		public void shutDown()
 		{
 			this.flag = true;
 		}
-		
+
 		@Override
 		public void run()
 		{
 			byte[] data = new byte[2048];
-			
-			while(flag == false)
+
+			while (flag == false)
 			{
 				try
 				{
 					int position = inputStream.read(data);
-					while(position < packageSize)
+					while (position < packageSize)
 					{
 						position += inputStream.read(data, position, packageSize - position);
 					}
-					
+
 					int srcId = MessageDecoder.GetDestId(data);
 					int topicId = MessageDecoder.GetTopicId(data);
 					int destId = MessageDecoder.GetDestId(data);
 					long timestamp = System.currentTimeMillis();
-					
-					for(IRecvMessageListener listener: listeners)
+
+					for (IRecvMessageListener listener : listeners)
 					{
 						listener.onRecvMessage(srcId, destId, topicId, timestamp, data);
 					}
-					
-					//结束接收
-					if(data[0] == 0 && data[1] == 0 && data[2] == 0 && data[3] == 0)
+
+					// 结束接收
+					if (data[0] == 0 && data[1] == 0 && data[2] == 0 && data[3] == 0)
 					{
 						break;
 					}
@@ -156,8 +157,8 @@ public class TCPServer4App implements IChannel, Runnable
 					e.printStackTrace();
 				}
 			}
-			
+
 		}
-		
+
 	}
 }
