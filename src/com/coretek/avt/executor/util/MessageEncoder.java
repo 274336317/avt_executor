@@ -9,9 +9,9 @@ import com.coretek.avt.executor.model.Message;
  */
 public class MessageEncoder
 {
-	public static byte[] Encode(Message msg)
+	public static byte[] Encode(Message msg, int periodIndex)
 	{
-		byte[] data = new byte[0];
+		byte[] data = new byte[2048];
 		
 		return data;
 	}

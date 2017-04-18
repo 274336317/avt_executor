@@ -15,4 +15,25 @@ public class MessageDecoder
 		
 		return msg;
 	}
+	
+	public static int GetSrcId(byte[] data)
+	{
+		int srcId = 0;
+		
+		return srcId;
+	}
+	
+	public static int GetTopicId(byte[] data)
+	{
+		int topicId = 0;
+		
+		return topicId;
+	}
+	
+	public static int GetDestId(byte[] data)
+	{
+		int destId = 0;
+		
+		return destId;
+	}
 }

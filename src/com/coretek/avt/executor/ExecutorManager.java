@@ -2,10 +2,17 @@ package com.coretek.avt.executor;
 
 import java.util.concurrent.CountDownLatch;
 
+import com.coretek.avt.executor.message.MessageManager;
+import com.coretek.avt.executor.model.Message;
 import com.coretek.avt.executor.server.ChannelManager;
 import com.coretek.avt.executor.server.IRecvMessageListener;
 
-public class ExecutorManager implements Runnable, IRecvMessageListener
+/**
+ * 此类负责执行测试用例中的所有消息
+ * @author David
+ *
+ */
+public class ExecutorManager implements Runnable, IRecvMessageListener, IMessageErrorListener
 {
 	private CountDownLatch	latch;
 
@@ -35,6 +42,13 @@ public class ExecutorManager implements Runnable, IRecvMessageListener
 
 			this.latch.countDown();
 		}
+	}
+
+	@Override
+	public void onMessageError(Message msg, int period, int errorCode)
+	{
+		System.err.println("errorCode:" + errorCode);
+		MessageManager.GetInstance().dispose();
 	}
 
 }

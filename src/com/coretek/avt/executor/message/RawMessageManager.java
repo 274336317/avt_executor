@@ -38,6 +38,36 @@ public class RawMessageManager implements IRecvMessageListener, ISendMessageList
 
 		return msg;
 	}
+	
+	/**
+	 * 找出与周期数相匹配的周期消息
+	 * @param srcId
+	 * @param topicId
+	 * @param period 从1开始
+	 * @return
+	 */
+	public RecvRawMessage findPeriodRecvMsg(int srcId, int topicId, int period)
+	{
+		RecvRawMessage msg = null;
+		synchronized(this.recvMessages)
+		{
+			int index = 0;
+			for(RecvRawMessage recv: recvMessages)
+			{
+				if(recv.getSrcId() == srcId && recv.getTopicId() == topicId)
+				{
+					index ++;
+					if(period == index)
+					{
+						msg = recv;
+						break;
+					}
+				}
+			}
+		}
+		
+		return msg;
+	}
 
 	public void addRecvMsg(RecvRawMessage recvMsg)
 	{

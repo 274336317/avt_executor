@@ -16,6 +16,8 @@ public class Message
 	private String	uuid;		// 消息的UUID
 
 	private int		srcId;		// 消息的发送源
+	
+	private int topicId;
 
 	private int[]	destIds;	// 消息的目的
 
@@ -26,6 +28,18 @@ public class Message
 	private byte[]	data;		// 消息的二进制值
 	
 	private List<Period> periods = new ArrayList<Period>(1);
+
+	
+	
+	public int getTopicId()
+	{
+		return topicId;
+	}
+
+	public void setTopicId(int topicId)
+	{
+		this.topicId = topicId;
+	}
 
 	public List<Period> getPeriods()
 	{
