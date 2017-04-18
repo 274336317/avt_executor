@@ -7,4 +7,6 @@ public interface ICommand
 	public String getCommand();
 	
 	public String[] getParams();
+	
+	public String getResult();
 }

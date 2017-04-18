@@ -40,7 +40,10 @@ public class TCPServer4Client implements IChannel, Runnable
 	@Override
 	public void close() throws IOException
 	{
-
+		//发送一个全0的消息给SPTE UI端
+		byte[] data = new byte[2048];
+		this.send(data);
+		
 		if (this.job != null)
 		{
 			this.job.shutDown();

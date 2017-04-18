@@ -2,6 +2,9 @@ package com.coretek.avt.executor;
 
 import java.util.concurrent.CountDownLatch;
 
+import com.coretek.avt.executor.command.ICommand;
+import com.coretek.avt.executor.command.ICommandHandler;
+import com.coretek.avt.executor.command.StopCommand;
 import com.coretek.avt.executor.message.MessageManager;
 import com.coretek.avt.executor.model.Message;
 import com.coretek.avt.executor.server.ChannelManager;
@@ -12,7 +15,7 @@ import com.coretek.avt.executor.server.IRecvMessageListener;
  * @author David
  *
  */
-public class ExecutorManager implements Runnable, IRecvMessageListener, IMessageErrorListener
+public class ExecutorManager implements Runnable, IRecvMessageListener, IMessageErrorListener, ICommandHandler
 {
 	private CountDownLatch	latch;
 
@@ -49,6 +52,15 @@ public class ExecutorManager implements Runnable, IRecvMessageListener, IMessage
 	{
 		System.err.println("errorCode:" + errorCode);
 		MessageManager.GetInstance().dispose();
+	}
+
+	@Override
+	public void handle(ICommand command)
+	{
+		if(command instanceof StopCommand)
+		{
+			ChannelManager.GetInstance().dispose();
+		}
 	}
 
 }

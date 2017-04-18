@@ -8,6 +8,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.coretek.avt.executor.util.MessageDecoder;
+
 /**
  * 用于与应用进行通信的TCP服务端。
  * @author David
@@ -133,9 +135,14 @@ public class TCPServer4App implements IChannel, Runnable
 						position += inputStream.read(data, position, packageSize - position);
 					}
 					
+					int srcId = MessageDecoder.GetDestId(data);
+					int topicId = MessageDecoder.GetTopicId(data);
+					int destId = MessageDecoder.GetDestId(data);
+					long timestamp = System.currentTimeMillis();
+					
 					for(IRecvMessageListener listener: listeners)
 					{
-						listener.onRecvMessage(data);
+						listener.onRecvMessage(srcId, destId, topicId, timestamp, data);
 					}
 					
 					//结束接收
