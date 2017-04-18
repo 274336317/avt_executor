@@ -19,6 +19,9 @@ public interface IMessageErrorListener
 	// 预期值与实际值不匹配
 	public final static int	ERROR_VALUE_NOT_MATCHED	= 3;
 
+	// 时间超时
+	public final static int	ERROR_TIMEOUT			= 4;
+
 	/**
 	 * 当执行消息出错时会调用此接口。
 	 * 
