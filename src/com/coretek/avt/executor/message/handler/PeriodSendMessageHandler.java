@@ -12,15 +12,20 @@ import com.coretek.avt.executor.server.ChannelManager;
 import com.coretek.avt.executor.server.IChannel;
 import com.coretek.avt.executor.util.MessageEncoder;
 
+/**
+ * 运行周期发送消息
+ * @author David
+ *
+ */
 public class PeriodSendMessageHandler extends AbstractMessageHandler
 {
 	private PeriodSendMessage	sendMsg;
 
 	private Timer				timer;
 
-	private int					periodIndex;
+	private volatile int		periodIndex;
 
-	private int					errorCode;
+	private volatile int		errorCode;
 
 	private CountDownLatch		latch	= new CountDownLatch(1);
 
@@ -37,7 +42,7 @@ public class PeriodSendMessageHandler extends AbstractMessageHandler
 		long time = this.sendMsg.getPeriod() * this.sendMsg.getPeriodCount();
 		try
 		{
-			if(this.latch.await(time, TimeUnit.MILLISECONDS))
+			if (this.latch.await(time, TimeUnit.MILLISECONDS))
 			{
 				if (errorCode != 0)
 				{
@@ -45,15 +50,20 @@ public class PeriodSendMessageHandler extends AbstractMessageHandler
 				}
 			}
 			else
-			{//时间超时
+			{// 时间超时
 				this.fireErrorEvent(sendMsg, periodIndex, IMessageErrorListener.ERROR_TIMEOUT);
 			}
-
 		}
 		catch (InterruptedException e)
 		{
 			e.printStackTrace();
+			this.fireErrorEvent(sendMsg, periodIndex, IMessageErrorListener.ERROR_SEND_FAILED);
 		}
+		finally
+		{
+			this.dispose();
+		}
+
 		return 0;
 	}
 
@@ -65,7 +75,6 @@ public class PeriodSendMessageHandler extends AbstractMessageHandler
 			this.timer.cancel();
 			this.timer = null;
 		}
-
 	}
 
 	private class Job extends TimerTask
@@ -73,22 +82,20 @@ public class PeriodSendMessageHandler extends AbstractMessageHandler
 		@Override
 		public void run()
 		{
+			IChannel channel = ChannelManager.GetInstance().getChannel(ChannelManager.KEY_CLIENT_APP);
+			byte[] data = MessageEncoder.Encode(sendMsg, periodIndex);
+			periodIndex++;
 			try
 			{
-				IChannel channel = ChannelManager.GetInstance().getChannel(ChannelManager.KEY_CLIENT_APP);
-				byte[] data = MessageEncoder.Encode(sendMsg, periodIndex);
-				periodIndex++;
-				try
-				{
-					channel.send(data);
-				}
-				catch (IOException e)
-				{
-					e.printStackTrace();
-					errorCode = IMessageErrorListener.ERROR_SEND_FAILED;
-				}
+				channel.send(data);
 			}
-			finally
+			catch (IOException e)
+			{
+				e.printStackTrace();
+				errorCode = IMessageErrorListener.ERROR_SEND_FAILED;
+				latch.countDown();
+			}
+			if (periodIndex >= sendMsg.getPeriodCount())
 			{
 				latch.countDown();
 			}

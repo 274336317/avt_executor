@@ -8,8 +8,14 @@ import java.util.Arrays;
  * @author David
  *
  */
-public class ParamManager
+public class ParamsManager
 {
+	//接收消息超时时间
+	public final static int RECV_MSG_TIMEOUT = 3 * 1000;
+	
+	//消息接收任务的运行周期
+	public final static int RECVJOB_INVOKE_PERIOD = 15;
+	
 	// 执行器的运行模式
 	private String		mode;
 	// 执行器在生成消息的内容时字节序
@@ -27,12 +33,12 @@ public class ParamManager
 	// 用于执行测试用例的端口号
 	private int			executionPort;
 
-	public ParamManager(String[] args)
+	public ParamsManager(String[] args)
 	{
 
 	}
 
-	public ParamManager(String mode, String endian, String beginMsg, String endMsg, String[] caseFiles)
+	public ParamsManager(String mode, String endian, String beginMsg, String endMsg, String[] caseFiles)
 	{
 		this.mode = mode;
 		this.endian = endian;

@@ -26,9 +26,20 @@ public class MessageHandlerManager implements IStopListener, IDisposable
 	{
 		this.handlers.add(handler);
 	}
+	
+	public void removeHandler(IMessageHandler handler)
+	{
+		this.handlers.remove(handler);
+	}
 
 	@Override
 	public void onStop()
+	{
+		this.dispose();
+	}
+
+	@Override
+	public void dispose()
 	{
 		synchronized (handlers)
 		{
@@ -38,15 +49,6 @@ public class MessageHandlerManager implements IStopListener, IDisposable
 			}
 
 			handlers.clear();
-		}
-	}
-
-	@Override
-	public void dispose()
-	{
-		for(IMessageHandler handler: handlers)
-		{
-			handler.dispose();
 		}
 	}
 }

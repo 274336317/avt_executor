@@ -22,4 +22,10 @@ public abstract class AbstractMessageHandler implements IMessageHandler
 			listener.onMessageError(msg, period, errorCode);
 		}
 	}
+	
+	@Override
+	public void dispose()
+	{
+
+	}
 }

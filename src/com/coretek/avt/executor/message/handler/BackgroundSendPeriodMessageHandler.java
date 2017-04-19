@@ -10,6 +10,11 @@ import com.coretek.avt.executor.server.ChannelManager;
 import com.coretek.avt.executor.server.IChannel;
 import com.coretek.avt.executor.util.MessageEncoder;
 
+/**
+ * 执行背景周期发送消息
+ * @author David
+ *
+ */
 public class BackgroundSendPeriodMessageHandler extends AbstractMessageHandler
 {
 	private BackgroundSendPeriodMessage	msg;

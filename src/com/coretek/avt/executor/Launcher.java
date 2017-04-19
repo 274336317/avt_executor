@@ -23,7 +23,7 @@ public class Launcher
 
 	public static final String	CASE_FILE	= "caseFile";
 
-	public static ParamManager	PARAM_MANAGER;
+	public static ParamsManager	PARAM_MANAGER;
 
 	private CountDownLatch		latch		= new CountDownLatch(1);
 
@@ -43,7 +43,7 @@ public class Launcher
 	{
 		Launcher launcher = new Launcher();
 
-		PARAM_MANAGER = new ParamManager(args);
+		PARAM_MANAGER = new ParamsManager(args);
 		ExecutorManager em = new ExecutorManager(launcher.latch);
 		new Thread(em).start();
 		try

@@ -3,13 +3,20 @@ package com.coretek.avt.executor.message.handler;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import com.coretek.avt.executor.IMessageErrorListener;
+import com.coretek.avt.executor.ParamsManager;
 import com.coretek.avt.executor.message.RawMessageManager;
 import com.coretek.avt.executor.message.RecvRawMessage;
 import com.coretek.avt.executor.model.PeriodRecvMessage;
 import com.coretek.avt.executor.util.MessageEncoder;
 
+/**
+ * 执行周期接收消息
+ * @author David
+ *
+ */
 public class PeriodRecvMessageHandler extends AbstractMessageHandler
 {
 	private PeriodRecvMessage	recvMessage;
@@ -20,7 +27,7 @@ public class PeriodRecvMessageHandler extends AbstractMessageHandler
 
 	private int					errorCode	= 0;
 
-	private int					periodIndex	= 0;
+	private int					periodIndex	= 1;
 
 	private CountDownLatch		latch		= new CountDownLatch(1);
 
@@ -37,15 +44,20 @@ public class PeriodRecvMessageHandler extends AbstractMessageHandler
 		timer.schedule(job, 0, recvMessage.getPeriod());
 		try
 		{
-			latch.await();
-			if(this.errorCode != 0)
+			boolean ret = latch.await(recvMessage.getPeriod() * recvMessage.getPeriodCount() + ParamsManager.RECV_MSG_TIMEOUT, TimeUnit.MILLISECONDS);
+			if (!ret)
+			{// 超时
+				this.fireErrorEvent(recvMessage, periodIndex, IMessageErrorListener.ERROR_TIMEOUT);
+			}
+			else if (this.errorCode != 0)
 			{
-				 fireErrorEvent(recvMessage, periodIndex, errorCode);
+				fireErrorEvent(recvMessage, periodIndex, errorCode);
 			}
 		}
 		catch (InterruptedException e)
 		{
 			e.printStackTrace();
+			this.fireErrorEvent(recvMessage, periodIndex, IMessageErrorListener.ERROR_RECV_FAILED);
 		}
 		return 0;
 	}
@@ -71,35 +83,23 @@ public class PeriodRecvMessageHandler extends AbstractMessageHandler
 		@Override
 		public void run()
 		{
-			try
+			RecvRawMessage raw = RawMessageManager.GetInstance().findPeriodRecvMsg(srcId, topicId, periodIndex);
+			if (raw != null)
 			{
-				for (int i = 1; i <= recvMessage.getPeriodCount(); i++)
+				byte[] expectedData = MessageEncoder.Encode(recvMessage, periodIndex);
+				byte[] actualData = raw.getData();
+				for (int k = 0; k < actualData.length; k++)
 				{
-					RecvRawMessage raw = RawMessageManager.GetInstance().findPeriodRecvMsg(srcId, topicId, i);
-					if (raw == null)
+					if (actualData[k] != expectedData[k])
 					{
-						errorCode = IMessageErrorListener.ERROR_RECV_FAILED;
+						errorCode = IMessageErrorListener.ERROR_VALUE_NOT_MATCHED;
+						dispose();
+						latch.countDown();
 						return;
 					}
-					else
-					{
-						byte[] expectedData = MessageEncoder.Encode(recvMessage, i);
-						byte[] actualData = raw.getData();
-						for (int k = 0; k < actualData.length; i++)
-						{
-							if (actualData[k] != expectedData[k])
-							{
-								errorCode = IMessageErrorListener.ERROR_VALUE_NOT_MATCHED;
-								return;
-							}
-						}
-					}
 				}
-			}
-			finally
-			{
-				dispose();
-				latch.countDown();
+				
+				periodIndex++;
 			}
 		}
 	}
