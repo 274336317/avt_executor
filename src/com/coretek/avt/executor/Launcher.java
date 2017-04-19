@@ -43,8 +43,8 @@ public class Launcher
 	{
 		Launcher launcher = new Launcher();
 
-		PARAM_MANAGER = new ParamsManager(args);
-		ExecutorManager em = new ExecutorManager(launcher.latch);
+		PARAM_MANAGER = new ParamsManager();
+		ControllManager em = new ControllManager(launcher.latch);
 		new Thread(em).start();
 		try
 		{

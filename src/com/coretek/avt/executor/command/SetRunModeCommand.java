@@ -1,8 +1,13 @@
 package com.coretek.avt.executor.command;
 
-public class SetEnvCommand implements ICommand
+/**
+ * 设置运行模式。当前支持的运行模式包括连续执行模式、调试模式两种。
+ * @author David
+ *
+ */
+public class SetRunModeCommand implements ICommand
 {
-
+	
 	@Override
 	public int getIndex()
 	{
@@ -35,14 +40,14 @@ public class SetEnvCommand implements ICommand
 	public void setSucc()
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void setFailed(String errMsg)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

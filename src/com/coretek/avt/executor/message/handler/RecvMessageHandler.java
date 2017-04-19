@@ -51,12 +51,14 @@ public class RecvMessageHandler extends AbstractMessageHandler
 			if (!ret)
 			{// ³¬Ê±
 				this.fireErrorEvent(recvMsg, 1, IMessageErrorListener.ERROR_TIMEOUT);
+				return IMessageHandler.FAILED;
 			}
 			else
 			{
 				if (errorCode != 0)
 				{
 					this.fireErrorEvent(recvMsg, period, errorCode);
+					return IMessageHandler.FAILED;
 				}
 			}
 		}
@@ -64,13 +66,14 @@ public class RecvMessageHandler extends AbstractMessageHandler
 		{
 			e.printStackTrace();
 			this.fireErrorEvent(recvMsg, period, IMessageErrorListener.ERROR_RECV_FAILED);
+			return IMessageHandler.FAILED;
 		}
 		finally
 		{
 			this.dispose();
 		}
 
-		return 0;
+		return IMessageHandler.SUCC;
 	}
 
 	@Override

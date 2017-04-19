@@ -96,12 +96,6 @@ public class RawMessageManager implements IRecvMessageListener, ISendMessageList
 	}
 
 	@Override
-	public void onRecvMessage(String data)
-	{
-
-	}
-
-	@Override
 	public void onSendMessage(int srcId, int topicId, int[] destIds, long timestamp, byte[] data)
 	{
 		synchronized (sendMessages)

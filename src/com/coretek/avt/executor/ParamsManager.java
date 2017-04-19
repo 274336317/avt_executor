@@ -16,6 +16,8 @@ public class ParamsManager
 	//消息接收任务的运行周期
 	public final static int RECVJOB_INVOKE_PERIOD = 15;
 	
+	private static ParamsManager INSTANCE = new ParamsManager();
+	
 	// 执行器的运行模式
 	private String		mode;
 	// 执行器在生成消息的内容时字节序
@@ -32,19 +34,40 @@ public class ParamsManager
 
 	// 用于执行测试用例的端口号
 	private int			executionPort;
-
-	public ParamsManager(String[] args)
+	
+	public static ParamsManager GetInstance()
 	{
-
+		return INSTANCE;
+	}
+	
+	public void setEndian(String endian)
+	{
+		this.endian = endian;
 	}
 
-	public ParamsManager(String mode, String endian, String beginMsg, String endMsg, String[] caseFiles)
+	public void setBeginMsg(String beginMsg)
 	{
-		this.mode = mode;
-		this.endian = endian;
 		this.beginMsg = beginMsg;
+	}
+
+	public void setEndMsg(String endMsg)
+	{
 		this.endMsg = endMsg;
-		this.caseFiles = Arrays.copyOf(caseFiles, caseFiles.length);
+	}
+
+	public void setCaseFiles(String[] caseFiles)
+	{
+		this.caseFiles = caseFiles;
+	}
+
+	public void setClientPort(int clientPort)
+	{
+		this.clientPort = clientPort;
+	}
+
+	public void setExecutionPort(int executionPort)
+	{
+		this.executionPort = executionPort;
 	}
 
 	public int getClientPort()
@@ -60,6 +83,11 @@ public class ParamsManager
 	public String getMode()
 	{
 		return mode;
+	}
+	
+	public void setMode(String mode)
+	{
+		this.mode = mode;
 	}
 
 	public String getEndian()

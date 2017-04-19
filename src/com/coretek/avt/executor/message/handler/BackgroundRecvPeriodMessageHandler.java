@@ -14,7 +14,7 @@ import com.coretek.avt.executor.util.MessageEncoder;
  * @author David
  *
  */
-public class BackgoundRecvPeriodMessageHandler extends AbstractMessageHandler
+public class BackgroundRecvPeriodMessageHandler extends AbstractMessageHandler
 {
 	private BackgroundRecvPeriodMessage	msg;
 
@@ -22,7 +22,7 @@ public class BackgoundRecvPeriodMessageHandler extends AbstractMessageHandler
 
 	private int							periodIndex	= 0;
 
-	public BackgoundRecvPeriodMessageHandler(BackgroundRecvPeriodMessage msg)
+	public BackgroundRecvPeriodMessageHandler(BackgroundRecvPeriodMessage msg)
 	{
 		this.msg = msg;
 	}
@@ -45,7 +45,7 @@ public class BackgoundRecvPeriodMessageHandler extends AbstractMessageHandler
 		timer = new Timer();
 		timer.schedule(new Job(), 0, period);
 		
-		return 0;
+		return IMessageHandler.SUCC;
 	}
 
 	private class Job extends TimerTask

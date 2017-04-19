@@ -14,6 +14,7 @@ import com.coretek.avt.executor.util.MessageEncoder;
 
 /**
  * 执行周期接收消息
+ * 
  * @author David
  *
  */
@@ -48,18 +49,21 @@ public class PeriodRecvMessageHandler extends AbstractMessageHandler
 			if (!ret)
 			{// 超时
 				this.fireErrorEvent(recvMessage, periodIndex, IMessageErrorListener.ERROR_TIMEOUT);
+				return IMessageHandler.FAILED;
 			}
 			else if (this.errorCode != 0)
 			{
 				fireErrorEvent(recvMessage, periodIndex, errorCode);
+				return IMessageHandler.FAILED;
 			}
 		}
 		catch (InterruptedException e)
 		{
 			e.printStackTrace();
 			this.fireErrorEvent(recvMessage, periodIndex, IMessageErrorListener.ERROR_RECV_FAILED);
+			return IMessageHandler.FAILED;
 		}
-		return 0;
+		return IMessageHandler.SUCC;
 	}
 
 	@Override
@@ -98,7 +102,7 @@ public class PeriodRecvMessageHandler extends AbstractMessageHandler
 						return;
 					}
 				}
-				
+
 				periodIndex++;
 			}
 		}

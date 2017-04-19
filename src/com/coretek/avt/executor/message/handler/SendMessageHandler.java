@@ -33,8 +33,9 @@ public class SendMessageHandler extends AbstractMessageHandler
 		{
 			e.printStackTrace();
 			this.fireErrorEvent(sendMsg, 1, IMessageErrorListener.ERROR_SEND_FAILED);
+			return IMessageHandler.FAILED;
 		}
 		
-		return 0;
+		return IMessageHandler.SUCC;
 	}
 }

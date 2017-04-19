@@ -39,18 +39,20 @@ public class ParallelRecvMessageHandler extends AbstractMessageHandler
 			if (!latch.await(ParamsManager.RECV_MSG_TIMEOUT, TimeUnit.MILLISECONDS))
 			{// ³¬Ê±
 				this.fireErrorEvent(recvMsg, 1, IMessageErrorListener.ERROR_TIMEOUT);
+				return IMessageHandler.FAILED;
 			}
 		}
 		catch (InterruptedException e)
 		{
 			e.printStackTrace();
 			this.fireErrorEvent(recvMsg, 1, IMessageErrorListener.ERROR_RECV_FAILED);
+			return IMessageHandler.FAILED;
 		} finally
 		{
 			this.dispose();
 		}
 
-		return 0;
+		return IMessageHandler.SUCC;
 	}
 	
 	@Override

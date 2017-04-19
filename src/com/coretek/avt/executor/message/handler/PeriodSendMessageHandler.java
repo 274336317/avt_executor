@@ -38,7 +38,7 @@ public class PeriodSendMessageHandler extends AbstractMessageHandler
 	public int handle()
 	{
 		timer = new Timer();
-		timer.schedule(new Job(), 0, this.sendMsg.getPeriod());
+		timer.schedule(new SendJob(), 0, this.sendMsg.getPeriod());
 		long time = this.sendMsg.getPeriod() * this.sendMsg.getPeriodCount();
 		try
 		{
@@ -47,24 +47,28 @@ public class PeriodSendMessageHandler extends AbstractMessageHandler
 				if (errorCode != 0)
 				{
 					this.fireErrorEvent(sendMsg, periodIndex, errorCode);
+					
+					return IMessageHandler.FAILED;
 				}
 			}
 			else
 			{// ʱ�䳬ʱ
 				this.fireErrorEvent(sendMsg, periodIndex, IMessageErrorListener.ERROR_TIMEOUT);
+				return IMessageHandler.FAILED;
 			}
 		}
 		catch (InterruptedException e)
 		{
 			e.printStackTrace();
 			this.fireErrorEvent(sendMsg, periodIndex, IMessageErrorListener.ERROR_SEND_FAILED);
+			return IMessageHandler.FAILED;
 		}
 		finally
 		{
 			this.dispose();
 		}
 
-		return 0;
+		return IMessageHandler.SUCC;
 	}
 
 	@Override
@@ -77,7 +81,7 @@ public class PeriodSendMessageHandler extends AbstractMessageHandler
 		}
 	}
 
-	private class Job extends TimerTask
+	private class SendJob extends TimerTask
 	{
 		@Override
 		public void run()

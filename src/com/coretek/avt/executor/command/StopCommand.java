@@ -2,7 +2,6 @@ package com.coretek.avt.executor.command;
 
 public class StopCommand implements ICommand
 {
-
 	@Override
 	public int getIndex()
 	{
@@ -29,6 +28,20 @@ public class StopCommand implements ICommand
 	{
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void setSucc()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setFailed(String errMsg)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

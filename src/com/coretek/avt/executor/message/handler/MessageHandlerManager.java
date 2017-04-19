@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.coretek.avt.executor.IDisposable;
-import com.coretek.avt.executor.IStopListener;
 
 /**
  * 消息处理器管理器
  * @author David
  *
  */
-public class MessageHandlerManager implements IStopListener, IDisposable
+public class MessageHandlerManager implements IDisposable
 {
 	private final static MessageHandlerManager	INSTANCE	= new MessageHandlerManager();
 
@@ -30,12 +29,6 @@ public class MessageHandlerManager implements IStopListener, IDisposable
 	public void removeHandler(IMessageHandler handler)
 	{
 		this.handlers.remove(handler);
-	}
-
-	@Override
-	public void onStop()
-	{
-		this.dispose();
 	}
 
 	@Override
