@@ -51,5 +51,14 @@ public class SetEnvCommand implements ICommand
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	/**
+	 * 获取测试用例的路径
+	 * @return
+	 */
+	public String getTestCasePath()
+	{
+		return null;
+	}
 
 }

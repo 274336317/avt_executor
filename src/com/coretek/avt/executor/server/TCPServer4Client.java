@@ -5,8 +5,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 用于向SPTE界面端发送执行结果
@@ -24,8 +22,6 @@ public class TCPServer4Client implements IChannel, Runnable
 
 	private OutputStream				outputStream;
 
-	private List<IRecvMessageListener>	listeners	= new ArrayList<IRecvMessageListener>(2);
-
 	private int							port;
 
 	public TCPServer4Client(int port)
@@ -38,7 +34,7 @@ public class TCPServer4Client implements IChannel, Runnable
 	{
 		//发送一个全0的消息给SPTE UI端
 		byte[] data = new byte[2048];
-		this.send(data);
+		this.send(0,0,null, data);
 
 		if (this.inputStream != null)
 		{
@@ -67,23 +63,22 @@ public class TCPServer4Client implements IChannel, Runnable
 	}
 
 	@Override
-	public void send(byte[] data) throws IOException
+	public void send(int srcId, int topicId, int [] destIds, byte[] data) throws IOException
 	{
 		if (this.outputStream != null)
 			this.outputStream.write(data);
-
 	}
 
 	@Override
 	public void addRecvMessageListener(IRecvMessageListener listener)
 	{
-		this.listeners.add(listener);
+		
 	}
 
 	@Override
 	public void removeRecvMessageListener(IRecvMessageListener listener)
 	{
-		this.listeners.remove(listener);
+		
 	}
 
 	@Override
@@ -100,6 +95,17 @@ public class TCPServer4Client implements IChannel, Runnable
 		{
 			e.printStackTrace();
 		}
+	}
 
+	@Override
+	public void addSendMessageListener(ISendMessageListener listener)
+	{
+		
+	}
+
+	@Override
+	public void removeSendMessageListener(ISendMessageListener listener)
+	{
+		
 	}
 }

@@ -91,7 +91,7 @@ public class PeriodSendMessageHandler extends AbstractMessageHandler
 			periodIndex++;
 			try
 			{
-				channel.send(data);
+				channel.send(sendMsg.getSrcId(), sendMsg.getTopicId(), sendMsg.getDestIds(), data);
 			}
 			catch (IOException e)
 			{

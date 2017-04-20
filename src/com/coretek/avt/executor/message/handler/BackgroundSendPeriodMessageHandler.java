@@ -53,7 +53,7 @@ public class BackgroundSendPeriodMessageHandler extends AbstractMessageHandler
 			IChannel channel = ChannelManager.GetInstance().getChannel(ChannelManager.KEY_CLIENT_APP);
 			try
 			{
-				channel.send(data);
+				channel.send(msg.getSrcId(), msg.getTopicId(), msg.getDestIds(),data);
 				periodIndex++;
 			}
 			catch (IOException e)

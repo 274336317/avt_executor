@@ -5,27 +5,43 @@ import java.util.List;
 
 /**
  * 表示测试用例
+ * 
  * @author David
  *
  */
 public class TestCase
 {
-	private String path;//测试用例文件的路径
-	
-	private List<Message> messages = new ArrayList<Message>();
-	
+	// 测试用例文件的路径
+	private String			path;									
+
+	private TestedObject[]	testedObjects;
+
+	private SimuObject[]	simuObjects;
+
+	private List<Object>	elements	= new ArrayList<Object>();
+
 	public TestCase(String path)
 	{
 		this.path = path;
 	}
-	
-	public void addMessage(Message msg)
+
+	public void setTestObjects(TestedObject[] testedObjects)
 	{
-		this.messages.add(msg);
+		this.testedObjects = testedObjects;
 	}
-	
-	public List<Message> getMessages()
+
+	public void setSimuObjects(SimuObject[] simuObjects)
 	{
-		return messages;
+		this.simuObjects = simuObjects;
+	}
+
+	public void addElement(Object element)
+	{
+		this.elements.add(element);
+	}
+
+	public List<Object> getElements()
+	{
+		return elements;
 	}
 }

@@ -28,7 +28,9 @@ public class TCPServer4App implements IChannel, Runnable
 
 	private int							port;
 
-	private List<IRecvMessageListener>	listeners	= new ArrayList<IRecvMessageListener>(2);
+	private List<IRecvMessageListener>	listeners		= new ArrayList<IRecvMessageListener>(2);
+
+	private List<ISendMessageListener>	sendListeners	= new ArrayList<ISendMessageListener>(2);
 
 	private RecvJob						recvJob;
 
@@ -88,14 +90,24 @@ public class TCPServer4App implements IChannel, Runnable
 			this.serverSocket.close();
 			this.serverSocket = null;
 		}
-
 	}
 
 	@Override
-	public void send(byte[] data) throws IOException
+	public void send(int srcId, int topicId, int[] destIds, byte[] data) throws IOException
 	{
 		if (this.outputStream != null)
+		{
 			this.outputStream.write(data);
+			this.fireOnMessageSendEvent(srcId, topicId, destIds, System.currentTimeMillis(), data);
+		}
+	}
+
+	private void fireOnMessageSendEvent(int srcId, int topicId, int[] destIds, long timestamp, byte[] data)
+	{
+		for (ISendMessageListener listener : sendListeners)
+		{
+			listener.onSendMessage(srcId, topicId, destIds, timestamp, data);
+		}
 	}
 
 	@Override
@@ -157,8 +169,18 @@ public class TCPServer4App implements IChannel, Runnable
 					e.printStackTrace();
 				}
 			}
-
 		}
+	}
 
+	@Override
+	public void addSendMessageListener(ISendMessageListener listener)
+	{
+		this.sendListeners.add(listener);
+	}
+
+	@Override
+	public void removeSendMessageListener(ISendMessageListener listener)
+	{
+		this.sendListeners.remove(listener);
 	}
 }

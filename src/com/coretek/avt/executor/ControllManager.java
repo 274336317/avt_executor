@@ -8,13 +8,15 @@ import com.coretek.avt.executor.command.ICommand;
 import com.coretek.avt.executor.command.ICommandListener;
 import com.coretek.avt.executor.command.RunCommand;
 import com.coretek.avt.executor.command.SetEnvCommand;
-import com.coretek.avt.executor.command.SetRunModeCommand;
 import com.coretek.avt.executor.command.StopCommand;
 import com.coretek.avt.executor.message.Message;
+import com.coretek.avt.executor.message.MessageManager;
 import com.coretek.avt.executor.message.handler.MessageHandlerManager;
 import com.coretek.avt.executor.rawmessage.IAllMessageDoneListener;
-import com.coretek.avt.executor.rawmessage.MessageManager;
+import com.coretek.avt.executor.rawmessage.RawMessageManager;
 import com.coretek.avt.executor.server.ChannelManager;
+import com.coretek.avt.executor.server.TCPServer4App;
+import com.coretek.avt.executor.server.TCPServer4Client;
 
 /**
  * 此类负责管理执行器的生命周期
@@ -75,20 +77,27 @@ public class ControllManager implements Runnable, IMessageErrorListener, IComman
 		{// 停止运行
 			ChannelManager.GetInstance().dispose();
 			this.shutdown();
-
 		}
 		else if (command instanceof SetEnvCommand)
 		{// 设置环境变量
-
+			//解析测试用例
+			
+			//启动与被测应用节点之间的通信服务
+			TCPServer4App app = new TCPServer4App(ParamsManager.GetInstance().getExecutionPort());
+			app.addRecvMessageListener(RawMessageManager.GetInstance());
+			app.addSendMessageListener(RawMessageManager.GetInstance());
+			ChannelManager.GetInstance().addChannel(ChannelManager.KEY_CLIENT_APP, app);
+			new Thread(app).start();
+			
+			//启动与SPTE UI之间的通信服务
+			TCPServer4Client client = new TCPServer4Client(ParamsManager.GetInstance().getClientPort());
+			ChannelManager.GetInstance().addChannel(ChannelManager.KEY_CLIENT_SPTE_UI,client);
+			new Thread(client).start();
 		}
 		else if (command instanceof RunCommand)
 		{// 运行消息
 			MessageManager mm = MessageManager.GetInstance();
 			new Thread(mm).start();
-		}
-		else if (command instanceof SetRunModeCommand)
-		{// 设置运行模式
-
 		}
 		else if(command instanceof ExitCommand)
 		{//退出

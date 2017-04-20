@@ -10,9 +10,21 @@ import java.io.IOException;
  */
 public interface IChannel extends Closeable
 {
-	public void send(byte[] data) throws IOException;
+	/**
+	 * ·¢ËÍÏûÏ¢
+	 * @param srcId
+	 * @param topicId
+	 * @param destIds
+	 * @param data
+	 * @throws IOException
+	 */
+	public void send(int srcId, int topicId, int [] destIds, byte[] data) throws IOException;
 	
 	public void addRecvMessageListener(IRecvMessageListener listener);
 	
 	public void removeRecvMessageListener(IRecvMessageListener listener);
+	
+	public void addSendMessageListener(ISendMessageListener listener);
+	
+	public void removeSendMessageListener(ISendMessageListener listener);
 }

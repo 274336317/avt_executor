@@ -5,7 +5,7 @@ package com.coretek.avt.executor.message;
  * @author David
  *
  */
-public class TimeStamp
+public class TimeSpan
 {
 	private String expression;//可能是一个数字或者数学表达式
 

@@ -11,26 +11,41 @@ import java.util.List;
  */
 public class Message
 {
-	private int		width;		// 消息的宽度，以字节为单位
 
-	private String	uuid;		// 消息的UUID
+	public final static int	DIRECTION_SEND	= 1;
 
-	private int		srcId;		// 消息的发送源
-	
-	private int topicId;
+	public final static int	DIRECTION_RECV	= 2;
 
-	private int[]	destIds;	// 消息的目的
+	private int				width;										// 消息的宽度，以字节为单位
 
-	private int		direction;	// 1表示发送，2表示接收
+	private String			uuid;										// 消息的UUID
 
-	private String	name;		// 消息名称
+	private int				srcId;										// 消息的发送源
 
-	private byte[]	data;		// 消息的二进制值
-	
-	private List<Period> periods = new ArrayList<Period>(1);
+	private int				topicId;
 
-	
-	
+	private int[]			destIds;									// 消息的目的
+
+	private int				direction;									// 1表示发送，2表示接收
+
+	private String			name;										// 消息名称
+
+	private byte[]			data;										// 消息的二进制值
+
+	private int				id;											// 消息ID
+
+	private List<Period>	periods			= new ArrayList<Period>(1);
+
+	public int getId()
+	{
+		return id;
+	}
+
+	public void setId(int id)
+	{
+		this.id = id;
+	}
+
 	public int getTopicId()
 	{
 		return topicId;

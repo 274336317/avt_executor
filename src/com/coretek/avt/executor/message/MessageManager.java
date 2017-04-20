@@ -1,4 +1,4 @@
-package com.coretek.avt.executor.rawmessage;
+package com.coretek.avt.executor.message;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,17 +7,6 @@ import java.util.List;
 import com.coretek.avt.executor.ControllManager;
 import com.coretek.avt.executor.IDisposable;
 import com.coretek.avt.executor.ParamsManager;
-import com.coretek.avt.executor.message.BackgroundRecvPeriodMessage;
-import com.coretek.avt.executor.message.BackgroundSendPeriodMessage;
-import com.coretek.avt.executor.message.IRecvMessage;
-import com.coretek.avt.executor.message.ISendMessage;
-import com.coretek.avt.executor.message.Message;
-import com.coretek.avt.executor.message.ParallelRecvMessage;
-import com.coretek.avt.executor.message.PeriodRecvMessage;
-import com.coretek.avt.executor.message.PeriodSendMessage;
-import com.coretek.avt.executor.message.RecvMessage;
-import com.coretek.avt.executor.message.SendMessage;
-import com.coretek.avt.executor.message.TimeStamp;
 import com.coretek.avt.executor.message.handler.BackgroundRecvPeriodMessageHandler;
 import com.coretek.avt.executor.message.handler.BackgroundSendPeriodMessageHandler;
 import com.coretek.avt.executor.message.handler.IMessageHandler;
@@ -27,6 +16,7 @@ import com.coretek.avt.executor.message.handler.PeriodRecvMessageHandler;
 import com.coretek.avt.executor.message.handler.PeriodSendMessageHandler;
 import com.coretek.avt.executor.message.handler.RecvMessageHandler;
 import com.coretek.avt.executor.message.handler.SendMessageHandler;
+import com.coretek.avt.executor.rawmessage.IAllMessageDoneListener;
 
 /**
  * 消息管理器。负责管理消息和安顺序执行消息
@@ -39,7 +29,7 @@ public class MessageManager implements IDisposable, Runnable
 	private static MessageManager			INSTANCE		= new MessageManager();
 
 	//测试用例文件中的所有消息
-	private List<Object>					messages		= new ArrayList<Object>();
+	private List<TestCase>					testCaseList	= new ArrayList<TestCase>();
 
 	//需要被执行的消息,由run命令所指定
 	private List<Object>					toBeExecuted	= new ArrayList<Object>();
@@ -53,9 +43,9 @@ public class MessageManager implements IDisposable, Runnable
 		return INSTANCE;
 	}
 
-	public void addMessage(Message msg)
+	public void addTestCase(TestCase testCase)
 	{
-		this.messages.add(msg);
+		this.testCaseList.add(testCase);
 	}
 
 	public void addAllMessageDoneListener(IAllMessageDoneListener listener)
@@ -70,14 +60,14 @@ public class MessageManager implements IDisposable, Runnable
 		String endUUID = ParamsManager.GetInstance().getEndMsg();
 		
 		int startIndex = 0;
-		int endIndex = messages.size();
+		int endIndex = testCaseList.size();
 		
 		
 		if(startUUID != null)
 		{
-			for(int i = 0; i < messages.size(); i++)
+			for(int i = 0; i < testCaseList.size(); i++)
 			{
-				Object obj =  messages.get(i);
+				Object obj =  testCaseList.get(i);
 				if(obj instanceof Message)
 				{
 					Message msg = (Message)obj;
@@ -92,9 +82,9 @@ public class MessageManager implements IDisposable, Runnable
 		
 		if(endUUID != null)
 		{
-			for(int i = 0; i < messages.size(); i++)
+			for(int i = 0; i < testCaseList.size(); i++)
 			{
-				Object obj =  messages.get(i);
+				Object obj =  testCaseList.get(i);
 				if(obj instanceof Message)
 				{
 					Message msg = (Message)obj;
@@ -108,7 +98,7 @@ public class MessageManager implements IDisposable, Runnable
 			}
 		}
 		
-		toBeExecuted = this.messages.subList(startIndex, endIndex);
+		toBeExecuted = this.testCaseList.get(0).getElements().subList(startIndex, endIndex);
 		
 		Iterator<Object> it = toBeExecuted.iterator();
 
@@ -134,9 +124,9 @@ public class MessageManager implements IDisposable, Runnable
 					break;
 				}
 			}
-			else if (obj instanceof TimeStamp)
-			{// 时间表达式
-				this.executeTimeStamp((TimeStamp) obj, messageIndex);
+			else if (obj instanceof TimeSpan)
+			{// 时间间隔
+				this.executeTimeStamp((TimeSpan) obj, messageIndex);
 			}
 
 			messageIndex++;
@@ -239,7 +229,7 @@ public class MessageManager implements IDisposable, Runnable
 		}
 	}
 
-	private void executeTimeStamp(TimeStamp ts, int messageIndex)
+	private void executeTimeStamp(TimeSpan ts, int messageIndex)
 	{
 
 	}
@@ -248,6 +238,6 @@ public class MessageManager implements IDisposable, Runnable
 	public void dispose()
 	{
 		flag = false;
-		this.messages.clear();
+		this.testCaseList.clear();
 	}
 }

@@ -27,7 +27,7 @@ public class SendMessageHandler extends AbstractMessageHandler
 		byte[] data = MessageEncoder.Encode(sendMsg, 1);
 		try
 		{
-			ChannelManager.GetInstance().getChannel(ChannelManager.KEY_CLIENT_APP).send(data);
+			ChannelManager.GetInstance().getChannel(ChannelManager.KEY_CLIENT_APP).send(sendMsg.getSrcId(), sendMsg.getTopicId(), sendMsg.getDestIds(), data);
 		}
 		catch (IOException e)
 		{
