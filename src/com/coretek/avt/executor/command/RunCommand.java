@@ -61,4 +61,11 @@ public class RunCommand implements ICommand
 	{
 		
 	}
+
+	@Override
+	public String getText()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

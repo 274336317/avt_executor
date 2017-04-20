@@ -7,9 +7,9 @@ import java.util.concurrent.TimeUnit;
 
 import com.coretek.avt.executor.IMessageErrorListener;
 import com.coretek.avt.executor.ParamsManager;
-import com.coretek.avt.executor.message.RawMessageManager;
-import com.coretek.avt.executor.message.RecvRawMessage;
-import com.coretek.avt.executor.model.ParallelRecvMessage;
+import com.coretek.avt.executor.message.ParallelRecvMessage;
+import com.coretek.avt.executor.rawmessage.RawMessageManager;
+import com.coretek.avt.executor.rawmessage.RecvRawMessage;
 
 /**
  * 执行并行接收消息

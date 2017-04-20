@@ -1,6 +1,6 @@
 package com.coretek.avt.executor;
 
-import com.coretek.avt.executor.model.TestCase;
+import com.coretek.avt.executor.message.TestCase;
 
 /**
  * ²âÊÔÓÃÀı½âÎöÆ÷

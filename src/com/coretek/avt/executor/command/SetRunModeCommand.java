@@ -1,13 +1,15 @@
 package com.coretek.avt.executor.command;
 
 /**
- * 设置运行模式。当前支持的运行模式包括连续执行模式、调试模式两种。
+ * 设置运行模式。当前支持的运行模式包括连续执行模式、调试模式两种。<br/>
+ * 命令格式为：<br/>
+ * <h1>编号,setRunMode,run/debug</h1>
+ * 如果是调试模式，则执行完run命令后执行器还需要等待
  * @author David
  *
  */
 public class SetRunModeCommand implements ICommand
 {
-	
 	@Override
 	public int getIndex()
 	{
@@ -50,4 +52,10 @@ public class SetRunModeCommand implements ICommand
 
 	}
 
+	@Override
+	public String getText()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

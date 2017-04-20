@@ -1,7 +1,13 @@
 package com.coretek.avt.executor.command;
 
-public class StopCommand implements ICommand
+/**
+ * 退出命令。此命令告诉执行器，结束生命周期。
+ * @author David
+ *
+ */
+public class ExitCommand implements ICommand
 {
+
 	@Override
 	public int getIndex()
 	{
@@ -34,14 +40,14 @@ public class StopCommand implements ICommand
 	public void setSucc()
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void setFailed(String errMsg)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

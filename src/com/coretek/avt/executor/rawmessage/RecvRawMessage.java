@@ -1,4 +1,4 @@
-package com.coretek.avt.executor.message;
+package com.coretek.avt.executor.rawmessage;
 
 public class RecvRawMessage extends RawMessage
 {

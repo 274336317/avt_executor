@@ -1,4 +1,4 @@
-package com.coretek.avt.executor.model;
+package com.coretek.avt.executor.message;
 
 public class PeriodSendMessage extends PeriodMessage implements ISendMessage
 {

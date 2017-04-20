@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.coretek.avt.executor.IMessageErrorListener;
-import com.coretek.avt.executor.model.Message;
+import com.coretek.avt.executor.message.Message;
 
 public abstract class AbstractMessageHandler implements IMessageHandler
 {

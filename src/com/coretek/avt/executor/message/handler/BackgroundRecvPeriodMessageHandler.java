@@ -4,9 +4,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.coretek.avt.executor.IMessageErrorListener;
-import com.coretek.avt.executor.message.RawMessageManager;
-import com.coretek.avt.executor.message.RecvRawMessage;
-import com.coretek.avt.executor.model.BackgroundRecvPeriodMessage;
+import com.coretek.avt.executor.message.BackgroundRecvPeriodMessage;
+import com.coretek.avt.executor.rawmessage.RawMessageManager;
+import com.coretek.avt.executor.rawmessage.RecvRawMessage;
 import com.coretek.avt.executor.util.MessageEncoder;
 
 /**

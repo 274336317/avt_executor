@@ -7,7 +7,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import com.coretek.avt.executor.IMessageErrorListener;
-import com.coretek.avt.executor.model.PeriodSendMessage;
+import com.coretek.avt.executor.message.PeriodSendMessage;
 import com.coretek.avt.executor.server.ChannelManager;
 import com.coretek.avt.executor.server.IChannel;
 import com.coretek.avt.executor.util.MessageEncoder;

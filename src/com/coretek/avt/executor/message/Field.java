@@ -1,4 +1,4 @@
-package com.coretek.avt.executor.model;
+package com.coretek.avt.executor.message;
 
 import java.util.ArrayList;
 import java.util.List;

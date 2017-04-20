@@ -1,6 +1,6 @@
 package com.coretek.avt.executor.util;
 
-import com.coretek.avt.executor.model.Message;
+import com.coretek.avt.executor.message.Message;
 
 /**
  * ÏûÏ¢½âÂëÆ÷

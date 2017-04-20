@@ -1,10 +1,23 @@
-package com.coretek.avt.executor.message;
+package com.coretek.avt.executor.rawmessage;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.coretek.avt.executor.ControllManager;
 import com.coretek.avt.executor.IDisposable;
+import com.coretek.avt.executor.ParamsManager;
+import com.coretek.avt.executor.message.BackgroundRecvPeriodMessage;
+import com.coretek.avt.executor.message.BackgroundSendPeriodMessage;
+import com.coretek.avt.executor.message.IRecvMessage;
+import com.coretek.avt.executor.message.ISendMessage;
+import com.coretek.avt.executor.message.Message;
+import com.coretek.avt.executor.message.ParallelRecvMessage;
+import com.coretek.avt.executor.message.PeriodRecvMessage;
+import com.coretek.avt.executor.message.PeriodSendMessage;
+import com.coretek.avt.executor.message.RecvMessage;
+import com.coretek.avt.executor.message.SendMessage;
+import com.coretek.avt.executor.message.TimeStamp;
 import com.coretek.avt.executor.message.handler.BackgroundRecvPeriodMessageHandler;
 import com.coretek.avt.executor.message.handler.BackgroundSendPeriodMessageHandler;
 import com.coretek.avt.executor.message.handler.IMessageHandler;
@@ -14,17 +27,6 @@ import com.coretek.avt.executor.message.handler.PeriodRecvMessageHandler;
 import com.coretek.avt.executor.message.handler.PeriodSendMessageHandler;
 import com.coretek.avt.executor.message.handler.RecvMessageHandler;
 import com.coretek.avt.executor.message.handler.SendMessageHandler;
-import com.coretek.avt.executor.model.BackgroundRecvPeriodMessage;
-import com.coretek.avt.executor.model.BackgroundSendPeriodMessage;
-import com.coretek.avt.executor.model.IRecvMessage;
-import com.coretek.avt.executor.model.ISendMessage;
-import com.coretek.avt.executor.model.Message;
-import com.coretek.avt.executor.model.ParallelRecvMessage;
-import com.coretek.avt.executor.model.PeriodRecvMessage;
-import com.coretek.avt.executor.model.PeriodSendMessage;
-import com.coretek.avt.executor.model.RecvMessage;
-import com.coretek.avt.executor.model.SendMessage;
-import com.coretek.avt.executor.model.TimeStamp;
 
 /**
  * 消息管理器。负责管理消息和安顺序执行消息
@@ -34,13 +36,17 @@ import com.coretek.avt.executor.model.TimeStamp;
  */
 public class MessageManager implements IDisposable, Runnable
 {
-	private static MessageManager			INSTANCE	= new MessageManager();
+	private static MessageManager			INSTANCE		= new MessageManager();
 
-	private List<Object>					messages	= new ArrayList<Object>();
+	//测试用例文件中的所有消息
+	private List<Object>					messages		= new ArrayList<Object>();
 
-	private List<IAllMessageDoneListener>	listeners	= new ArrayList<IAllMessageDoneListener>();
+	//需要被执行的消息,由run命令所指定
+	private List<Object>					toBeExecuted	= new ArrayList<Object>();
 
-	private volatile boolean				flag		= true;
+	private List<IAllMessageDoneListener>	listeners		= new ArrayList<IAllMessageDoneListener>();
+
+	private volatile boolean				flag			= true;
 
 	public static MessageManager GetInstance()
 	{
@@ -60,7 +66,51 @@ public class MessageManager implements IDisposable, Runnable
 	@Override
 	public void run()
 	{
-		Iterator<Object> it = messages.iterator();
+		String startUUID = ParamsManager.GetInstance().getBeginMsg();
+		String endUUID = ParamsManager.GetInstance().getEndMsg();
+		
+		int startIndex = 0;
+		int endIndex = messages.size();
+		
+		
+		if(startUUID != null)
+		{
+			for(int i = 0; i < messages.size(); i++)
+			{
+				Object obj =  messages.get(i);
+				if(obj instanceof Message)
+				{
+					Message msg = (Message)obj;
+					if(startUUID.equals(msg.getUuid()))
+					{
+						startIndex = i;
+						break;
+					}
+				}
+			}
+		}
+		
+		if(endUUID != null)
+		{
+			for(int i = 0; i < messages.size(); i++)
+			{
+				Object obj =  messages.get(i);
+				if(obj instanceof Message)
+				{
+					Message msg = (Message)obj;
+					if(endUUID.equals(msg.getUuid()))
+					{
+						endIndex = i;
+						endIndex++;
+						break;
+					}
+				}
+			}
+		}
+		
+		toBeExecuted = this.messages.subList(startIndex, endIndex);
+		
+		Iterator<Object> it = toBeExecuted.iterator();
 
 		int messageIndex = 0;
 
@@ -91,6 +141,16 @@ public class MessageManager implements IDisposable, Runnable
 
 			messageIndex++;
 		}
+
+		this.fireOnAllMessageDoneEvent();
+	}
+
+	private void fireOnAllMessageDoneEvent()
+	{
+		for (IAllMessageDoneListener listener : listeners)
+		{
+			listener.onAllMessageDone();
+		}
 	}
 
 	/**
@@ -104,20 +164,27 @@ public class MessageManager implements IDisposable, Runnable
 		if (msg instanceof BackgroundSendPeriodMessage)
 		{
 			BackgroundSendPeriodMessageHandler handler = new BackgroundSendPeriodMessageHandler((BackgroundSendPeriodMessage) msg);
+			handler.addMessageErrorListener(ControllManager.GetInstance());
 			MessageHandlerManager.GetInstance().addHandler(handler);
 			return handler.handle();
 		}
 		else if (msg instanceof PeriodSendMessage)
 		{
 			PeriodSendMessageHandler handler = new PeriodSendMessageHandler((PeriodSendMessage) msg);
+			handler.addMessageErrorListener(ControllManager.GetInstance());
 			MessageHandlerManager.GetInstance().addHandler(handler);
-			return handler.handle();
+			int ret = handler.handle();
+
+			return ret;
 		}
 		else if (msg instanceof SendMessage)
 		{
 			SendMessageHandler handler = new SendMessageHandler((SendMessage) msg);
+			handler.addMessageErrorListener(ControllManager.GetInstance());
 			MessageHandlerManager.GetInstance().addHandler(handler);
-			return handler.handle();
+			int ret = handler.handle();
+			MessageHandlerManager.GetInstance().removeHandler(handler);
+			return ret;
 		}
 		else
 		{
@@ -125,27 +192,46 @@ public class MessageManager implements IDisposable, Runnable
 		}
 	}
 
+	/**
+	 * 执行接收消息
+	 * @param msg
+	 * @return
+	 */
 	private int executeRecvMessage(IRecvMessage msg)
 	{
 		if (msg instanceof BackgroundRecvPeriodMessage)
 		{
 			BackgroundRecvPeriodMessageHandler handler = new BackgroundRecvPeriodMessageHandler((BackgroundRecvPeriodMessage) msg);
-			return handler.handle();
+			handler.addMessageErrorListener(ControllManager.GetInstance());
+			int ret = handler.handle();
+			return ret;
 		}
 		else if (msg instanceof PeriodRecvMessage)
 		{
 			PeriodRecvMessageHandler handler = new PeriodRecvMessageHandler((PeriodRecvMessage) msg);
-			return handler.handle();
+			handler.addMessageErrorListener(ControllManager.GetInstance());
+			int ret = handler.handle();
+			MessageHandlerManager.GetInstance().removeHandler(handler);
+
+			return ret;
 		}
 		else if (msg instanceof ParallelRecvMessage)
 		{
 			ParallelRecvMessageHandler handler = new ParallelRecvMessageHandler((ParallelRecvMessage) msg);
-			return handler.handle();
+			handler.addMessageErrorListener(ControllManager.GetInstance());
+			int ret = handler.handle();
+			MessageHandlerManager.GetInstance().removeHandler(handler);
+
+			return ret;
 		}
 		else if (msg instanceof RecvMessage)
 		{
 			RecvMessageHandler handler = new RecvMessageHandler((RecvMessage) msg);
-			return handler.handle();
+			handler.addMessageErrorListener(ControllManager.GetInstance());
+			int ret = handler.handle();
+			MessageHandlerManager.GetInstance().removeHandler(handler);
+
+			return ret;
 		}
 		else
 		{

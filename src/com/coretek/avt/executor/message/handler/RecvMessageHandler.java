@@ -7,9 +7,9 @@ import java.util.concurrent.TimeUnit;
 
 import com.coretek.avt.executor.IMessageErrorListener;
 import com.coretek.avt.executor.ParamsManager;
-import com.coretek.avt.executor.message.RawMessageManager;
-import com.coretek.avt.executor.message.RecvRawMessage;
-import com.coretek.avt.executor.model.RecvMessage;
+import com.coretek.avt.executor.message.RecvMessage;
+import com.coretek.avt.executor.rawmessage.RawMessageManager;
+import com.coretek.avt.executor.rawmessage.RecvRawMessage;
 import com.coretek.avt.executor.util.MessageEncoder;
 
 /**

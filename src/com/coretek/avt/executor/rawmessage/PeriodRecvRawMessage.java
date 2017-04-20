@@ -1,4 +1,4 @@
-package com.coretek.avt.executor.message;
+package com.coretek.avt.executor.rawmessage;
 
 /**
  * 周期接收消息

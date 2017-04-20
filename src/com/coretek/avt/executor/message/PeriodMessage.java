@@ -1,4 +1,4 @@
-package com.coretek.avt.executor.model;
+package com.coretek.avt.executor.message;
 
 /**
  * 周期消息

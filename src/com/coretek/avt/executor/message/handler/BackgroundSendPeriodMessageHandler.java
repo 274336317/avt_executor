@@ -5,7 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.coretek.avt.executor.IMessageErrorListener;
-import com.coretek.avt.executor.model.BackgroundSendPeriodMessage;
+import com.coretek.avt.executor.message.BackgroundSendPeriodMessage;
 import com.coretek.avt.executor.server.ChannelManager;
 import com.coretek.avt.executor.server.IChannel;
 import com.coretek.avt.executor.util.MessageEncoder;

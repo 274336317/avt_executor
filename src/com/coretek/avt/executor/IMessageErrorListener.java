@@ -1,6 +1,6 @@
 package com.coretek.avt.executor;
 
-import com.coretek.avt.executor.model.Message;
+import com.coretek.avt.executor.message.Message;
 
 /**
  * 当执行消息出错时会通过此接口通知感兴趣的对象

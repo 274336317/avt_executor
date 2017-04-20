@@ -3,7 +3,7 @@ package com.coretek.avt.executor.message.handler;
 import java.io.IOException;
 
 import com.coretek.avt.executor.IMessageErrorListener;
-import com.coretek.avt.executor.model.SendMessage;
+import com.coretek.avt.executor.message.SendMessage;
 import com.coretek.avt.executor.server.ChannelManager;
 import com.coretek.avt.executor.util.MessageEncoder;
 

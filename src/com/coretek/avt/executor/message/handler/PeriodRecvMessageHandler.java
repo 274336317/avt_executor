@@ -7,9 +7,9 @@ import java.util.concurrent.TimeUnit;
 
 import com.coretek.avt.executor.IMessageErrorListener;
 import com.coretek.avt.executor.ParamsManager;
-import com.coretek.avt.executor.message.RawMessageManager;
-import com.coretek.avt.executor.message.RecvRawMessage;
-import com.coretek.avt.executor.model.PeriodRecvMessage;
+import com.coretek.avt.executor.message.PeriodRecvMessage;
+import com.coretek.avt.executor.rawmessage.RawMessageManager;
+import com.coretek.avt.executor.rawmessage.RecvRawMessage;
 import com.coretek.avt.executor.util.MessageEncoder;
 
 /**
@@ -69,7 +69,11 @@ public class PeriodRecvMessageHandler extends AbstractMessageHandler
 	@Override
 	public void dispose()
 	{
-		timer.cancel();
+		if(timer != null)
+		{
+			timer.cancel();
+			timer = null;
+		}
 	}
 
 	private class Job extends TimerTask

@@ -1,4 +1,4 @@
-package com.coretek.avt.executor.message;
+package com.coretek.avt.executor.rawmessage;
 
 public class PeriodRawMessage extends RawMessage
 {
