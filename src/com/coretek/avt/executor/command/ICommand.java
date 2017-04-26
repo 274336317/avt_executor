@@ -12,6 +12,10 @@ package com.coretek.avt.executor.command;
  */
 public interface ICommand
 {
+	public final static String DONE = "^done";
+	
+	public final static String ERR = "^error";
+	
 	/**
 	 * 获取控制命令的文本形式
 	 * @return
@@ -19,11 +23,11 @@ public interface ICommand
 	public String getText();
 		
 	/**
-	 * 获取命令的索引号
+	 * 获取命令的编号
 	 * @return
 	 */
 	public int getIndex();
-
+	
 	/**
 	 * 获取命令名称
 	 * @return
@@ -49,7 +53,7 @@ public interface ICommand
 	
 	/**
 	 * 将命令执行结果设置为失败状态
-	 * @param errMsg
+	 * @param reason 失败的原因描述
 	 */
-	public void setFailed(String errMsg);
+	public void setFailed(String reason);
 }

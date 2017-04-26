@@ -92,12 +92,11 @@ public class CommandManager implements Runnable
 						ICommand cmd = commandParser.parse(str);
 						if (cmd == null)
 						{// Î´ÖªÃüÁî
-							// TODO
+							throw new RuntimeException("Unkown Command!\n command=" + str);
 						}
 						else
 						{
 							addCommand(cmd);
-							fireCommandEvent(cmd);
 						}
 					}
 				}
